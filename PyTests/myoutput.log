@@ -1,0 +1,91 @@
+============================= test session starts ==============================
+platform darwin -- Python 2.7.16, pytest-4.6.11, py-1.9.0, pluggy-0.13.1 -- /System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python
+cachedir: .pytest_cache
+rootdir: /Users/shashidharjayarama/PycharmProjects/pythonProject/API_Project_new1
+plugins: cloud-5.0.2, xdist-1.34.0, forked-1.3.0
+collecting ... collected 5 items
+
+test_list_User.py::test_valid_user_with_token[FINPP-Finn-pp-358418232323] PASSED [ 20%]
+test_list_User.py::test_valid_user_with_token[FINPX-Fin-pq-358418232343] FAILED [ 40%]
+test_list_User.py::test_token_authentication PASSED                      [ 60%]
+test_list_User.py::test_users_list PASSED                                [ 80%]
+test_list_User.py::test_put_user[FINPP] FAILED                           [100%]
+
+=================================== FAILURES ===================================
+____________ test_valid_user_with_token[FINPX-Fin-pq-358418232343] _____________
+
+supply_url = 'http://localhost:8080/api', userid = 'FINPX', firstname = 'Fin'
+lastname = 'pq', phone = '358418232343'
+
+    @pytest.mark.parametrize("userid,firstname,lastname,phone",
+                             [("FINPP", "Finn", "pp", "358418232323"), (("FINPX", "Fin", "pq", "358418232343"))])
+    def test_valid_user_with_token(supply_url, userid, firstname, lastname, phone):
+        url = supply_url + "/users/" + str(userid)
+        payload = {}
+        token = supply_token()
+        headers = {
+            'Content-Type': 'application/json',
+            'Token': token
+        }
+        resp = requests.request("GET", url, headers=headers, data=payload)
+>       j = json.loads(resp.text)
+
+test_list_User.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/json/__init__.py:339: in loads
+    return _default_decoder.decode(s)
+/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/json/decoder.py:364: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x106af4450>
+s = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>500 Internal Server Error</title>
+<h1>Internal Server ...and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` or ``unicode``
+        beginning with a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration:
+>           raise ValueError("No JSON object could be decoded")
+E           ValueError: No JSON object could be decoded
+
+/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/json/decoder.py:382: ValueError
+_____________________________ test_put_user[FINPP] _____________________________
+
+supply_url = 'http://localhost:8080/api', userid = 'FINPP'
+
+    @pytest.mark.parametrize("userid",["FINPP"])
+    def test_put_user(supply_url, userid):
+        url = supply_url + "/users/" + str(userid)
+    
+        payload = payload = "{\n        \"firstname\": \"Finn\",\n        \"lastname\": \"pp\",\n        \"phone\": " \
+                            "\"358418232323\"\n} "
+        token = supply_token()
+        headers = {
+            'Content-Type': 'application/json',
+            'Token': token
+        }
+        response = requests.request("PUT", url, headers=headers, data=payload)
+>       assert response.status_code == 200, response.text
+E       AssertionError: <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+E         <title>500 Internal Server Error</title>
+E         <h1>Internal Server Error</h1>
+E         <p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+E         
+E       assert 500 == 200
+E         -500
+E         +200
+
+test_list_User.py:50: AssertionError
+====================== 2 failed, 3 passed in 0.66 seconds ======================
