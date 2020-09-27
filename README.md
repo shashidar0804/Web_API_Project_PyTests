@@ -38,6 +38,8 @@ POSTMAN has been used to get the token for the URL  http://localhost:8080/api/au
 4. Test GET specific user with valid token and invalid userid - Test case failed with 500 status code as the server is throwing an error "payload = {'firstname': query[0][0],
 IndexError: list index out of range"  This needs a fix.
 
+5. Validate the list of the users from API -  API will provide the users list without token so it needs to be fixed to validate the token first before providing the users list.
+
 
 
 
